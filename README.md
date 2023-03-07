@@ -9,11 +9,13 @@
 ## 服务地址
 Eureka：http://localhost:8070/
 
-hello-client：http://localhost:8079/api/client/rest/hello/client
+Zuul网关：http://localhost:8079
 
-hello-server：http://localhost:8072/api/server/rest/hello/server
+hello-client：http://localhost:8072/api/client/rest/hello/client
 
-hello-server：http://localhost:8079/api/server/rest/hello/server
+hello-server：http://localhost:8071/api/server/rest/hello/server
+
+hello-server：http://localhost:8077/api/server/rest/hello/server
 
 Hystrix Dashboard：http://localhost:8079/hystrix
 
