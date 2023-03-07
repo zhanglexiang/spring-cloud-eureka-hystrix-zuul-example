@@ -14,12 +14,57 @@ eureka:
   instance:
     hostname: localhost
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# 详细的配置说明：https://cloud.tencent.com/developer/article/1475862
+
+# 默认情况下，如果断路器保护的方法调用超过 20 次，而且 50%
+# 以上的调用在 10 秒的时间内发生失败，那么断路器就会进入打开状态。
+# 所有后续的调用都将会由后备方法处理。在 5 秒之后，断路器进入半开状态，将会再次尝试调用原始的方法。
+
+#  我们可以通过设置 Hystrix 命令的属性调整失败和重试的阈值：
+#  circuitBreaker.requestVolumeThreshold: 在给定的时间范围内，方法应该被调用的次数。    -默认20次
+#  circuitBreaker.errorThresholdPercentage: 在给定的时间范围内，方法调用产生失败的百分比。  -默认50%
+#  metrics.rollingStats.timeInMilliseconds: 控制请求量和错误百分比的滚动时间周期(给定的时间范围)。   -默认10秒
+#  circuitBreaker.sleepWindowInMilliseconds:处于打开状态的断路器要经过多长时间才会进入半开状态，进入半开状态之后，将会再次尝试失败的原始方法。- 默认5秒
+#
+#  如果在metrics.rollingStats.timeInMilliseconds 设定的时间范围内超出了 circuitBreaker.requestVolumeThreshold 和 circuitBreaker.errorThresholdPercentage 设置的值，
+#  那么断路器将会进人打开状态。在 circuitBreaker.sleepWindowInMilliseconds 限定的时间范围内，它会一直处于打开状态,在此之后将进入半开状态，进入半开状态之后，将会再次尝试失败的原始方法。
+
 hystrix:
   command:
+    #全局默认配置
     default:
+      #线程隔离相关
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 60000
+            #方式执行的超时时间，默认为1000毫秒，在实际场景中需要根据情况设置
+            timeoutInMilliseconds: 1000
+    #熔断器相关配置
+    circuitBreaker:
+      #说明1：启用熔断器功能窗口时间内的最小请求数，假设我们设置的窗口时间为10秒，
+      #说明2：那么如果此时默认值为20的话，那么即便10秒内有19个请求都失败也不会打开熔断器。
+      #说明3：此配置项需要根据接口的QPS进行计算，值太小会有误打开熔断器的可能，而如果值太大超出了时间窗口内的总请求数，则熔断永远也不会被触发
+      #说明4：建议设置一般为：QPS*窗口描述*60%
+      requestVolumeThreshold: 5
+      #说明1：熔断器被打开后，所有的请求都会被快速失败掉，但是何时恢复服务是一个问题。熔断器打开后，Hystrix会在经过一段时间后就放行一条请求
+      #说明2：如果请求能够执行成功，则说明此时服务可能已经恢复了正常，那么熔断器会关闭；相反执行失败，则认为服务仍然不可用，熔断器保持打开。
+      #说明3：所以此配置的作用是指定熔断器打开后多长时间内允许一次请求尝试执行，官方默认配置为5秒。
+      sleepWindowInMilliseconds: 60000
+      #说明1:该配置是指在通过滑动窗口获取到当前时间段内Hystrix方法执行失败的几率后，根据此配置来判断是否需要打开熔断器
+      #说明2:这里官方的默认配置为50，即窗口时间内超过50%的请求失败后就会打开熔断器将后续请求快速失败掉
+      errorThresholdPercentage: 50
+    metrics:
+      rollingStats:
+        #说明：此配置用于设置Hystrix统计滑动窗口的时间，单位为毫秒，默认设置为10000毫秒，即一个滑动窗口默认统计的是10秒内的请求数据。
+        timeInMilliseconds: 10000
+        #说明2：此属性指定了滑动统计窗口划分的桶数。默认为10。
+        #说明2：需要注意的是，metrics.rollingStats.timeInMilliseconds % metrics.rollingStats.numBuckets == 0必须成立，否则就会抛出异常
+        numBuckets: 10
 
 

@@ -1,4 +1,4 @@
-package com.techprimers.cloud;
+package com.laozhang.cloud;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;

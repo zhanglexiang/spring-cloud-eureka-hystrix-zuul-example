@@ -23,8 +23,16 @@ spring:
   application:
     name: zuul-service
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
 # Increase the Hystrix timeout to 60s (for all)
 hystrix:
+  dashboard:
+    proxy-stream-allow-list: '**'
   command:
     default:
       execution:

@@ -3,7 +3,7 @@ spring:
     name: hello-server
 
 server:
-  port: 8071
+  port: 8077
 
 eureka:
   client:
@@ -13,3 +13,4 @@ eureka:
       defaultZone: http://localhost:8070/eureka/
   instance:
     hostname: localhost
+
