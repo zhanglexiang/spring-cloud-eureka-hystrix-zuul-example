@@ -19,7 +19,7 @@ Hystrix Dashboard：http://localhost:8079/hystrix
 
 Hystrix Stream: http://localhost:8072/actuator/hystrix.stream
 
-## 
+## Hystrix Dashboard 分析
 ![img.png](img.png)
 
 - 1、圆点：微服务的健康状态，颜色有绿色、黄色、橙色、红色，健康状态依次降低
