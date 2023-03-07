@@ -11,15 +11,21 @@ Eureka：http://localhost:8070/
 
 Zuul网关：http://localhost:8079
 
-hello-client：http://localhost:8072/api/client/rest/hello/client
+hello-client 路由：http://localhost:8079/api/client/rest/hello/client
 
-hello-server：http://localhost:8071/api/server/rest/hello/server
-
-hello-server：http://localhost:8077/api/server/rest/hello/server
+hello-server 路由：http://localhost:8079/api/server/rest/hello/server
 
 Hystrix Dashboard：http://localhost:8079/hystrix
 
 Hystrix Stream: http://localhost:8072/actuator/hystrix.stream
+
+#### 独立访问, hello-server启动两个服务测试单节点熔断后效果
+
+hello-client：http://localhost:8072/rest/hello/client
+
+hello-server：http://localhost:8071/rest/hello/server
+
+hello-server：http://localhost:8077/rest/hello/server
 
 ## Hystrix Dashboard 分析
 ![img.png](img.png)
